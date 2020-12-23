@@ -1,0 +1,183 @@
+﻿{% include "base.html" %}
+
+{% block css_code %}
+
+<style>
+   .blur_container{
+      /* background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.35)); */
+      filter: blur(13px);
+   }
+
+   /*---- Cookies Banner ----*/
+   .cookie-banner {
+	 position: fixed;
+	 left: 0;
+	 right: 0;
+	 bottom: 0;
+	 color: #fff;
+	 text-align: center;
+	 padding: 1rem 1rem;
+	 background: #000;
+	 transition: all 5s cubic-bezier(0.19, 1, 0.22, 1);
+	 -webkit-transition: all 5s cubic-bezier(0.19, 1, 0.22, 1);
+	 -moz-transition: all 5s cubic-bezier(0.19, 1, 0.22, 1);
+	 -ms-transition: all 5s cubic-bezier(0.19, 1, 0.22, 1);
+	 -o-transition: all 5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+ .cookie-banner--hide {
+	 opacity: 0;
+	 bottom: -100%;
+}
+ .cookie-banner .cookie-banner-button {
+	 display: inline-block;
+	 cursor: pointer;
+	 padding: 0.85rem 1rem;
+	 margin-left: 0.45rem;
+	 color: #000;
+	 font-size: 0.75rem;
+	 text-decoration: none;
+	 letter-spacing: 1px;
+	 background: #fff;
+}
+ @media only screen and (max-width: 600px) {
+	 .cookie-banner span {
+		 display: inline-block;
+		 padding: 10px;
+	}
+}
+
+
+
+/*======================
+   Set Cookies
+=======================*/
+#cookie-bar{
+  font-family: 'Montserrat', sans-serif;
+  background: #232c41;
+  display:block;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  left: 0px;
+  color: #fff;
+  width: 100%;
+}
+#cookie-bar p{width: 85%;float: left;display: inline-block;font-size: 15px;line-height: 24px;color: #adadad;}
+#cookie-bar button{float: right;background: transparent;border: 1px solid #fff;color: #fff;padding: 15px 20px;text-transform: uppercase;font-size: 16px;margin-top: 5px; border-radius: 4px;}
+#cookie-bar a{color: #fff;}
+#contentcookie{ padding:20px 50px; width: 80%; margin: auto; }
+
+.clear{ clear:both; }
+        
+
+  @media(max-width: 767px){
+
+#cookie-bar p{width: 100%;font-size: 14px;}
+#cookie-bar button{width: 100%;}
+#cookie-bar a{color: #fff;}
+#contentcookie{padding: 20px 0px;width: 90%;margin: auto;}
+  }
+ 
+</style>   
+
+{% endblock %}   
+
+{% block html_code %}
+
+<div class="container-fluid gedf-wrapper {% if is_cookie != '1' %} blur_container {% endif %}">
+   <div class="row">
+      <div class="col-md-3">
+         
+      </div>
+      <div class="col-md-6 gedf-main">
+
+         <!--- \\\\\\\Post-->
+         {% if response_data %}
+
+         {% for img_obj in response_data %}
+         <div class="card gedf-card">
+            <div class="card-header">
+               <div class="d-flex justify-content-between align-items-center">
+                  <div class="d-flex justify-content-between align-items-center">
+                     <div class="mr-2">
+                        <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
+                     </div>
+                     <div class="ml-2">
+                        <div class="h5 m-0">{{img_obj.name}}</div>
+                        <div class="h7 text-muted">{{img_obj.id}}</div>
+                     </div>
+                  </div>
+                  <div>
+                     
+                  </div>
+               </div>
+
+            </div>
+            <div class="card-body">
+         
+                  <img src="{{img_obj.url}}" class="card-img image-responsive" alt="" style="margin-right: auto;
+  display: block;display: block;">
+
+            </div>
+            
+         </div>
+         {% endfor %}
+         {% else %}
+            <h3> No meme found :( </h3>
+         {% endif %}
+         <!-- Post /////-->
+
+
+
+      </div>
+      <div class="col-md-3">
+         
+      </div>
+   </div>
+</div>
+
+<form action="." id="cookie_form" method="post">
+{% csrf_token %}   
+<div id='cookie-bar'>
+   <div id='contentcookie'>
+      <p>This Messege will disapper after 5 second. You can't see our memes unless and until did't accept cookies. Please click on Accet button two times</p><input type="submit" id='Cookie' name="accept_btn" tabindex=1 value="I accept">
+         <input type="submit" id='Cookie-decline' name="decline_btn" tabindex=1 value="I Decline">
+      <div class='clear'></div>
+   </div>
+</div>
+</form>
+
+{% endblock %}
+
+{% block js_code %}
+      <script>
+         // show cookies function
+         function ShowCookie(){
+            $('#cookie-bar').show();
+         }
+         // hide cookies function
+         function HideCookie() {
+               $('#cookie-bar').hide();
+            }
+
+         // submit cookies function
+         function FormSubmit(){
+            $('#cookie_form').submit();
+         }
+
+         is_cookie = {{is_cookie}};
+         if(is_cookie == '0'){
+            // SetTimeout
+            setTimeout(function () {
+               HideCookie()
+            }, 5000)  
+         }else{
+            HideCookie()
+         }
+      </script>
+
+      <script>
+         let card_body_width = $('.card-body').width;
+         $('.card-img').width(card_body_width);
+      </script>
+{% endblock %}
